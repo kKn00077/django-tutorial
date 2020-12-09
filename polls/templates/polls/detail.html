@@ -1,0 +1,25 @@
+<h1>{{ question.question_text }}</h1>
+
+{% if error_message %}
+<p><strong>{{error_message}}</strong></p>
+{% endif %}
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+<!-- https://codevang.tistory.com/282 -->
+{% csrf_token %} <!-- post양식은 사이트 간 요청 위조 건에 대한 문제점이 있고 장고 내에서 이런 문제를 보호해주기 위해서는 내부 URL을 대상으로 하는 모든 POST 양식은 crsrf_token 템플릿 태그 사용-->
+{% for choice in question.choice_set.all %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+    <label for="choice{{ forloop.counter}}">
+    {{choice.choice_text}}
+    </label><br>
+{% endfor %}
+<input type="submit" value="Vote">
+</form>
+
+{% comment %} 
+<ul>
+{% for choice in question.choice_set.all %} <!--파이썬의 question.choice_set.all()과 동일-->
+    <li> {{ choice.choice_text }}</li>
+{% endfor %}
+</ul> 
+{% endcomment %}

@@ -1,0 +1,7 @@
+<ul>
+{% for choice in question.choice_set.all %} <!--파이썬의 question.choice_set.all()과 동일-->
+    <li> {{ choice.choice_text }} -- {{ choice.votes}} vote{{choice.votes|pluralize}}<!-- choice.votes가 2 이상이면 s를 붙인다 --></li>
+{% endfor %}
+</ul> 
+
+<a href="{% url 'polls:detail' question.id%}">Vote again?</a>
