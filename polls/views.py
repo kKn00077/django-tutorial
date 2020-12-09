@@ -1,6 +1,6 @@
 from django.http import Http404, HttpResponse, HttpResponseRedirect # 404페이지, response, redirect
 from django.shortcuts import render, get_object_or_404 # view load, 404 단축 기능
-from django.urls import reverse # 만약 stub 메서드를 사용한다면 활성화
+from django.urls import reverse
 from django.views import generic #제너릭 뷰
 
 # from django.template import loader
