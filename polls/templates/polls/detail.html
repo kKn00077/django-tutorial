@@ -1,7 +1,7 @@
 <h1>{{ question.question_text }}</h1>
 
 {% if error_message %}
-<p><strong>{{error_message}}</strong></p>
+<p><strong>{{error_message}}</strong></p> <!-- error_message가 어디에서 보내주는 건지 알아볼것 -->
 {% endif %}
 
 <form action="{% url 'polls:vote' question.id %}" method="post">

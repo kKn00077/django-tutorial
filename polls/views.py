@@ -13,6 +13,10 @@ from .models import Question, Choice
 # https://blog.naver.com/PostView.nhn?blogId=pjok1122&logNo=221609547295
 # https://dowtech.tistory.com/4
 # https://idlecomputer.tistory.com/28
+# https://yonghyunlee.gitlab.io/python/django-master-10/
+# https://donis-note.medium.com/%EC%9E%A5%EA%B3%A0-%EC%A0%9C%EB%84%A4%EB%A6%AD-%EB%B7%B0-django-generic-views-af5ba9046ab4
+# https://wayhome25.github.io/django/2017/05/02/CBV/
+
 # ListView, DetailView - 제너릭 뷰의 한 종류
 # ListView - 개체 목록 표시 제너릭 뷰
 # ListView 제네릭 뷰는 <app name>/<model name>_list.html
@@ -25,7 +29,9 @@ class IndexView(generic.ListView):
     template_name = 'polls/index.html' # 이미 있는 polls/index.html을 사용
     context_object_name = 'latest_question_list'
 
-    def get_queryset(self):
+    # https://pjs21s.github.io/queryset/
+    # https://beomi.github.io/2017/08/25/DjangoCBV-queryset-vs-get_queryset/
+    def get_queryset(self): # 제너릭 뷰 내부에 있는 메소드를 오버라이딩, get_queryset 에서 반환되는 메소드가 없을 경우 404를 발생시키는지 알아볼것
         """ 
             마지막으로 게시된 5개의 질문 반환 
             http://recordingbetter.com/django/2017/06/07/Django-ORM
@@ -39,7 +45,14 @@ class DetailView(generic.DetailView): # detailView는 기본적으로 전달받�
     model = Question # 모델을 넘겨서 전달받은 pk값을 사용해 객체를 템플릿에 넘기게 됨 (pk를 거치기 때문에 넘겨주는 객체는 한개뿐이다)
     # template_name 지정하지 않으면 <app name>/<model name>_detail.html 로 장고 내부에서 유추시켜 해당 템플릿 적용
     template_name = 'polls/detail.html' # 자동으로 생성되는 템플릿 대신 특정 템플릿 이름을 지정
-    # 같은 DetailView를 사용하지만 다른 템플릿을 사용해 서로 다른 모습으로 보이게 함
+    def get_queryset(self):
+        # IndexView에 제약조건을 추가해 추후에 띄울 질문 목록을 안 띄운다고 해도
+        # 사용자가 url에 추측하거나 알고 있어서 DetailView로 넘어갈 가능성도 있음
+        # 그럴 경우에 대비해 비슷한 제약조건을 추가
+        return Question.objects.filter(pub_date__lte=timezone.now())
+
+# 같은 DetailView를 사용하지만 다른 템플릿을 사용해 서로 다른 모습으로 보이게 함
+
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
