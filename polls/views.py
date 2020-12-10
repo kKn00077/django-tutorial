@@ -2,6 +2,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect # 404페이�
 from django.shortcuts import render, get_object_or_404 # view load, 404 단축 기능, render 사용할 경우 loader와 HttpResponse import 안해도 됨. 다만 stub 메서드 사용할 경우 HttpResponse import 필요
 from django.urls import reverse
 from django.views import generic #제너릭 뷰
+from django.utils import timezone
 
 # from django.template import loader
 from .models import Question, Choice
@@ -25,8 +26,14 @@ class IndexView(generic.ListView):
     context_object_name = 'latest_question_list'
 
     def get_queryset(self):
-        """ 마지막으로 게시된 5개의 질문 반환 """
-        return Question.objects.order_by('-pub_date')[:5]
+        """ 
+            마지막으로 게시된 5개의 질문 반환 
+            http://recordingbetter.com/django/2017/06/07/Django-ORM
+            https://ssungkang.tistory.com/entry/Django-ORM-Cookbook-%EC%A1%B0%ED%9A%8C-%EA%B2%B0%EA%B3%BC%EB%A5%BC-%EC%A0%95%EB%A0%AC%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95
+        """
+        return Question.objects.filter(
+            pub_date__lte=timezone.now() # __는 where 절을 뜻함
+        ).order_by('-pub_date')[:5] # - 는 내림차순 정렬
 
 class DetailView(generic.DetailView): # detailView는 기본적으로 전달받은 값을 pk로 생각한다.
     model = Question # 모델을 넘겨서 전달받은 pk값을 사용해 객체를 템플릿에 넘기게 됨 (pk를 거치기 때문에 넘겨주는 객체는 한개뿐이다)
