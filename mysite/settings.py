@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+# manage.py 와 django-admin.py의 차이 - https://devlog.jwgo.kr/2018/02/07/what-is-the-diff-btw-manage-django-admin/
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
